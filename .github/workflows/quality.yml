@@ -57,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -68,9 +68,10 @@ jobs:
           tools: composer:v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: "22"
+          node-version: "24"
+          package-manager-cache: false
 
       - name: Validate Composer metadata
         run: composer validate --strict
@@ -105,19 +106,22 @@ jobs:
         shell: bash
         run: |
           export MYSQL_PWD="$DB_PASS"
-          mysql --host="$DB_HOST" --port="$DB_PORT" --user="$DB_USER" "$DB_NAME" \
-            < database/baseline/2026_09_05_schema.sql
-          mysql --host="$DB_HOST" --port="$DB_PORT" --user="$DB_USER" "$DB_NAME" \
-            < database/seeds/2026_09_05_reference_data.sql
+          mysql_ci() {
+            mysql \
+              --host="$DB_HOST" \
+              --port="$DB_PORT" \
+              --user="$DB_USER" \
+              --default-character-set=utf8mb4 \
+              --init-command="SET collation_connection = 'utf8mb4_unicode_ci'" \
+              "$DB_NAME" "$@"
+          }
+          mysql_ci < database/baseline/2026_09_05_schema.sql
+          mysql_ci < database/seeds/2026_09_05_reference_data.sql
           php database/bootstrap_admin.php
-          mysql --host="$DB_HOST" --port="$DB_PORT" --user="$DB_USER" "$DB_NAME" \
-            < database/migrations/2026_07_13_rebuild_financial_categories.sql
-          mysql --host="$DB_HOST" --port="$DB_PORT" --user="$DB_USER" "$DB_NAME" \
-            < database/migrations/2026_07_13_seed_2025_2026_competitions_teams.sql
-          mysql --host="$DB_HOST" --port="$DB_PORT" --user="$DB_USER" "$DB_NAME" \
-            < database/migrations/2026_07_13_seed_2025_2026_movements.sql
-          mysql --host="$DB_HOST" --port="$DB_PORT" --user="$DB_USER" "$DB_NAME" \
-            < database/migrations/2026_07_13_seed_2025_2026_matches.sql
+          mysql_ci < database/migrations/2026_07_13_rebuild_financial_categories.sql
+          mysql_ci < database/migrations/2026_07_13_seed_2025_2026_competitions_teams.sql
+          mysql_ci < database/migrations/2026_07_13_seed_2025_2026_movements.sql
+          mysql_ci < database/migrations/2026_07_13_seed_2025_2026_matches.sql
 
       - name: Run standalone smoke tests
         run: |

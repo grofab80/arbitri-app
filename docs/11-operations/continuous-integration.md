@@ -15,7 +15,7 @@ Il job pubblicato da GitHub si chiama `Quality checks` ed esegue:
 - caricamento dei dati di riferimento e dei seed di test
 - esecuzione dei sette smoke test presenti in `tests/smoke`
 
-L'ambiente CI usa PHP 8.2, Node.js 22 e MariaDB 10.11. Le credenziali e le
+L'ambiente CI usa PHP 8.2, Node.js 24 e MariaDB 10.11. Le credenziali e le
 chiavi presenti nel workflow sono valori temporanei validi soltanto nel job e
 non devono essere riutilizzati in ambienti reali.
 
