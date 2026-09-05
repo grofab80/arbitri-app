@@ -1,0 +1,15 @@
+{
+  "name": "grofab80/arbitri-app",
+  "description": "Gestionale sportivo e amministrativo per associazioni arbitrali.",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "firebase/php-jwt": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Api\\": "api/",
+      "Config\\": "config/"
+    }
+  }
+}

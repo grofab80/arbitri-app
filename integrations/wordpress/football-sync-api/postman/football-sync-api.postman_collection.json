@@ -1,0 +1,468 @@
+{
+  "info": {
+    "_postman_id": "b55fcb81-7f98-4f2e-94f1-9bbda11f7b25",
+    "name": "Football Sync API",
+    "description": "Collection per verificare il plugin WordPress Football Sync API e i dati AnWP normalizzati per arbitri-app.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('HTTP 200', function () {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test('Response JSON valida', function () {",
+          "    const body = pm.response.json();",
+          "    pm.expect(body).to.have.property('success', true);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Diagnostica",
+      "item": [
+        {
+          "name": "Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/info",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "info"
+              ]
+            },
+            "description": "Verifica plugin, autenticazione, versione WordPress e disponibilita delle tabelle AnWP."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sincronizzazione",
+      "item": [
+        {
+          "name": "Sync incrementale",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.success && body.indexed_at) {",
+                  "    pm.collectionVariables.set('updatedAfter', body.indexed_at);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sync?updated_after={{updatedAfter}}&refresh={{syncRefresh}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sync"
+              ],
+              "query": [
+                {
+                  "key": "updated_after",
+                  "value": "{{updatedAfter}}"
+                },
+                {
+                  "key": "refresh",
+                  "value": "{{syncRefresh}}"
+                }
+              ]
+            },
+            "description": "Aggiorna l'indice e restituisce ID modificati o cancellati. Dopo una risposta valida salva indexed_at nella variabile updatedAfter."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stagioni",
+      "item": [
+        {
+          "name": "Elenco stagioni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/seasons?page=1&limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "seasons"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "id",
+                  "value": "{{seasonId}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Elenca le stagioni dedotte da competizioni e partite AnWP. Abilitare id per il dettaglio puntuale."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Competizioni",
+      "item": [
+        {
+          "name": "Elenco competizioni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/competitions?page=1&limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "competitions"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "id",
+                  "value": "{{competitionId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "season",
+                  "value": "{{seasonId}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Elenca le competizioni. I filtri id e season sono predisposti ma disattivati."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Squadre",
+      "item": [
+        {
+          "name": "Elenco squadre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/teams?page=1&limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "teams"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "id",
+                  "value": "{{teamId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "competition",
+                  "value": "{{competitionId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "season",
+                  "value": "{{seasonId}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Elenca le squadre e le relative competizioni dedotte dalle partite."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stadi",
+      "item": [
+        {
+          "name": "Elenco stadi",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stadiums?page=1&limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stadiums"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "id",
+                  "value": "{{stadiumId}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Elenca gli stadi dedotti dagli stadium_id presenti su squadre e partite."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Arbitri",
+      "item": [
+        {
+          "name": "Elenco arbitri",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/referees?page=1&limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "referees"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "id",
+                  "value": "{{refereeId}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Elenca gli arbitri dedotti dal campo referee delle partite."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Partite",
+      "item": [
+        {
+          "name": "Elenco partite",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/matches?page=1&limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "matches"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "id",
+                  "value": "{{matchId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "competition",
+                  "value": "{{competitionId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "season",
+                  "value": "{{seasonId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "team",
+                  "value": "{{teamId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "stadium",
+                  "value": "{{stadiumId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "referee",
+                  "value": "{{refereeId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "{{matchStatus}}",
+                  "disabled": true
+                },
+                {
+                  "key": "date_from",
+                  "value": "{{dateFrom}}",
+                  "disabled": true
+                },
+                {
+                  "key": "date_to",
+                  "value": "{{dateTo}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Elenca le partite. Abilitare i filtri necessari; status ammette scheduled, played o cancelled."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://example.com/wp-json/football-sync/v1",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "updatedAfter",
+      "value": "1970-01-01T00:00:00Z",
+      "type": "string"
+    },
+    {
+      "key": "syncRefresh",
+      "value": "true",
+      "type": "string"
+    },
+    {
+      "key": "seasonId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "competitionId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "teamId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "stadiumId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "refereeId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "matchId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "matchStatus",
+      "value": "scheduled",
+      "type": "string"
+    },
+    {
+      "key": "dateFrom",
+      "value": "2025-07-01",
+      "type": "string"
+    },
+    {
+      "key": "dateTo",
+      "value": "2026-06-30",
+      "type": "string"
+    }
+  ]
+}

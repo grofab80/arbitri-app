@@ -1,0 +1,47 @@
+# Dependencies rebuilt from lock files
+/vendor/
+/node_modules/
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+/config/*.local.php
+
+# Runtime data
+*.log
+*.pid
+/cache/
+/logs/
+/storage/
+/temp/
+/tmp/
+/uploads/
+
+# Local database material
+/database/backups/
+/database/dumps/
+/database/local/
+# Obsolete local fixture with known test credentials
+/database/migrations/2026_06_12_create_test_user.sql
+*.sql.gz
+*.dump
+*.bak
+*.backup
+
+# Test and coverage output
+.phpunit.result.cache
+/coverage/
+
+# Editors and local agents
+/.agents/
+/.codex/
+/.idea/
+/.vscode/
+*.suo
+*.user
+
+# Operating systems
+.DS_Store
+Thumbs.db
+Desktop.ini
