@@ -31,4 +31,5 @@ Ogni nuova funzionalita deve aggiornare almeno:
 - un ADR in `12-decisions`, se introduce una decisione architetturale rilevante
 
 Il flusso Git e la regola sulle operazioni esplicite sono descritti in
-`11-operations/version-control.md`.
+`11-operations/version-control.md`. I controlli automatici e la protezione del
+branch principale sono descritti in `11-operations/continuous-integration.md`.

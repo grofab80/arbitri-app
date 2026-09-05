@@ -13,6 +13,10 @@ I branch vengono integrati in `main` dopo verifica del codice e della
 documentazione. Le versioni pubblicate usano tag Semantic Versioning, a partire
 da `v0.1.0-alpha.1`.
 
+Il controllo GitHub Actions `Quality checks` deve essere superato prima
+dell'integrazione in `main`. Configurazione e regole operative sono descritte in
+`continuous-integration.md`.
+
 ## Operazioni Esplicite
 
 Le modifiche ai file restano locali finche l'utente non richiede esplicitamente

@@ -14,3 +14,4 @@
 - CRUD principali verificati
 - dashboard verificata
 - documentazione aggiornata
+- workflow GitHub Actions `Quality checks` completato con successo
