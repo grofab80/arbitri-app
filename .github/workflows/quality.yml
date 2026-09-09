@@ -107,21 +107,23 @@ jobs:
         run: |
           export MYSQL_PWD="$DB_PASS"
           mysql_ci() {
-            mysql \
-              --host="$DB_HOST" \
-              --port="$DB_PORT" \
-              --user="$DB_USER" \
-              --default-character-set=utf8mb4 \
-              --init-command="SET collation_connection = 'utf8mb4_unicode_ci'" \
-              "$DB_NAME" "$@"
+            {
+              echo "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;"
+              cat "$1"
+            } | mysql \
+                --host="$DB_HOST" \
+                --port="$DB_PORT" \
+                --user="$DB_USER" \
+                --default-character-set=utf8mb4 \
+                "$DB_NAME"
           }
-          mysql_ci < database/baseline/2026_09_05_schema.sql
-          mysql_ci < database/seeds/2026_09_05_reference_data.sql
+          mysql_ci database/baseline/2026_09_05_schema.sql
+          mysql_ci database/seeds/2026_09_05_reference_data.sql
           php database/bootstrap_admin.php
-          mysql_ci < database/migrations/2026_07_13_rebuild_financial_categories.sql
-          mysql_ci < database/migrations/2026_07_13_seed_2025_2026_competitions_teams.sql
-          mysql_ci < database/migrations/2026_07_13_seed_2025_2026_movements.sql
-          mysql_ci < database/migrations/2026_07_13_seed_2025_2026_matches.sql
+          mysql_ci database/migrations/2026_07_13_rebuild_financial_categories.sql
+          mysql_ci database/migrations/2026_07_13_seed_2025_2026_competitions_teams.sql
+          mysql_ci database/migrations/2026_07_13_seed_2025_2026_movements.sql
+          mysql_ci database/migrations/2026_07_13_seed_2025_2026_matches.sql
 
       - name: Run standalone smoke tests
         run: |
