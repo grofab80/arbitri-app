@@ -33,6 +33,17 @@ Il progetto ha un solo manutentore operativo, quindi non viene richiesto un
 numero minimo di approvazioni. Il passaggio tramite pull request resta utile per
 rendere visibili diff, controlli e motivazione dell'intervento.
 
+### Stato Del Repository
+
+Il workflow `Quality checks` e attivo. La protezione tecnica del branch non e
+attualmente applicabile perche il repository e privato e il piano GitHub in uso
+non include Branch Protection per repository privati. GitHub richiede il
+passaggio a un piano che supporti la funzione oppure la visibilita pubblica.
+
+Fino a tale modifica, pull request e superamento della CI restano regole
+operative del progetto, ma GitHub non puo impedire tecnicamente push diretti,
+force push o cancellazione di `main`.
+
 ## Esecuzione Locale
 
 Prima di pubblicare un branch eseguire almeno:
